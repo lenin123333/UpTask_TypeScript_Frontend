@@ -1,16 +1,17 @@
 import { Link } from "react-router-dom"
 import { useForm } from 'react-hook-form'
 import ProjectForm from "@/components/projects/ProjectForm"
+import { ProjectFormData } from "types"
 
 function CreateProjectView() {
-    const initialValues = {
+    const initialValues :ProjectFormData= {
         projectName: "",
         clientName: "",
         description: ""
     }
     const { register, handleSubmit, formState: { errors } } = useForm({ defaultValues: initialValues })
 
-    const handleForm = (data) => {
+    const handleForm = (data:ProjectFormData) => {
         console.log(data)
     }
     return (
@@ -25,7 +26,7 @@ function CreateProjectView() {
                 </nav>
 
                 <form className=" mt-10 bg-white shadow-lg p-10 rounded-lg"
-                    onSubmit={handleForm(handleForm)}
+                    onSubmit={handleForm(initialValues)}
                     noValidate
                 >
                     <ProjectForm 
