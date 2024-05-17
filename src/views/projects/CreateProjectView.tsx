@@ -1,9 +1,10 @@
 import { Link,useNavigate } from "react-router-dom"
 import { useForm } from 'react-hook-form'
+import {useMutation} from '@tanstack/react-query'
 import {toast} from 'react-toastify'
 import ProjectForm from "@/components/projects/ProjectForm"
 import { ProjectFormData } from "@/types/index"
-import { CreateProject } from "@/api/ProjectApi"
+import { createProject } from "@/api/ProjectApi"
 
 function CreateProjectView() {
     const navigate= useNavigate()
@@ -14,10 +15,22 @@ function CreateProjectView() {
     }
     const { register, handleSubmit, formState: { errors } } = useForm({ defaultValues: initialValues })
 
-    const handleForm = async (data:ProjectFormData) => {
-        const response=await CreateProject(data)
-        toast.success(response)
-        navigate('/')
+    //Es reactQuery solo se le pasa el nombre del metodo
+    const {mutate}= useMutation({
+        mutationFn: createProject,
+        onError:(error)=>{
+            toast.error(error.message)
+        },
+        //Si todo va bien se obtiene el response de la api
+        //Como los callbacks para saber ue pasa en fetch
+        onSuccess:(response)=>{
+            toast.success(response)
+            navigate('/')
+        }
+    })
+    const handleForm = (data:ProjectFormData) => {
+        //De esta forma tenemos mas control de lo que pase en los envios de datos
+        mutate(data)
     }
     return (
         <>
